@@ -1,0 +1,363 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ── 1. UNIFIED TOKEN SYSTEM (CSS VARIABLES) ─────────────────────────────── */
+:root {
+  /* LIGHT THEME TOKENS */
+  color-scheme: light;
+  --bg-gradient: linear-gradient(180deg, #F8F9FF 0%, #EEF1FF 100%);
+  --bg-color: #F8F9FF;
+  --glow-1: rgba(47, 95, 224, 0.08);
+  --glow-2: rgba(124, 58, 237, 0.07);
+  --glow-3: rgba(8, 145, 166, 0.05);
+
+  --surface: #FFFFFF;
+  --surface-hover: #F4F6FF;
+  --border: rgba(11, 18, 32, 0.09);
+  --border-hover: rgba(47, 95, 224, 0.35);
+
+  --text-primary: #0B1220;
+  --text-secondary: #475069;
+  --text-muted: #5B6478;
+
+  --input-bg: #FFFFFF;
+  --input-border: rgba(11, 18, 32, 0.15);
+
+  --accent-blue: #2F5FE0;
+  --accent-violet: #7C3AED;
+  --accent-cyan: #0891A6;
+  --accent-green: #059669;
+
+  --pill-bg: rgba(47, 95, 224, 0.10);
+  --pill-text: #1E3FA8;
+  --pill-border: rgba(47, 95, 224, 0.20);
+
+  --nav-bg: rgba(248, 249, 255, 0.85);
+  --card-shadow: 0 4px 20px rgba(11, 18, 32, 0.05), 0 1px 3px rgba(11, 18, 32, 0.02);
+  --glow-blue-card: 0 14px 34px rgba(47, 95, 224, 0.14), 0 4px 12px rgba(11, 18, 32, 0.04);
+  --glow-violet-card: 0 14px 34px rgba(124, 58, 237, 0.14), 0 4px 12px rgba(11, 18, 32, 0.04);
+  --glow-cyan-card: 0 14px 34px rgba(8, 145, 166, 0.14), 0 4px 12px rgba(11, 18, 32, 0.04);
+  --glow-green-card: 0 14px 34px rgba(5, 150, 105, 0.14), 0 4px 12px rgba(11, 18, 32, 0.04);
+  --card-glare: rgba(47, 95, 224, 0.05);
+}
+
+.dark {
+  /* DARK THEME TOKENS (DEFAULT) */
+  color-scheme: dark;
+  --bg-gradient: linear-gradient(180deg, #0A1226 0%, #070B18 45%, #05070D 100%);
+  --bg-color: #070B18;
+  --glow-1: rgba(91, 140, 255, 0.14);
+  --glow-2: rgba(155, 107, 255, 0.12);
+  --glow-3: rgba(59, 216, 240, 0.06);
+
+  --surface: #0E1424;
+  --surface-hover: #131B30;
+  --border: rgba(255, 255, 255, 0.10);
+  --border-hover: rgba(91, 140, 255, 0.40);
+
+  --text-primary: #E8ECF8;
+  --text-secondary: #A9B3CC;
+  --text-muted: #8590AA;
+
+  --input-bg: #0A0F1E;
+  --input-border: rgba(255, 255, 255, 0.12);
+
+  --accent-blue: #5B8CFF;
+  --accent-violet: #9B6BFF;
+  --accent-cyan: #3BD8F0;
+  --accent-green: #34D399;
+
+  --pill-bg: rgba(91, 140, 255, 0.14);
+  --pill-text: #BFD0FF;
+  --pill-border: rgba(91, 140, 255, 0.25);
+
+  --nav-bg: rgba(10, 18, 38, 0.82);
+  --card-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
+  --glow-blue-card: 0 14px 36px rgba(91, 140, 255, 0.22), 0 2px 8px rgba(0, 0, 0, 0.5);
+  --glow-violet-card: 0 14px 36px rgba(155, 107, 255, 0.22), 0 2px 8px rgba(0, 0, 0, 0.5);
+  --glow-cyan-card: 0 14px 36px rgba(59, 216, 240, 0.22), 0 2px 8px rgba(0, 0, 0, 0.5);
+  --glow-green-card: 0 14px 36px rgba(52, 211, 153, 0.22), 0 2px 8px rgba(0, 0, 0, 0.5);
+  --card-glare: rgba(91, 140, 255, 0.12);
+}
+
+/* ── 2. CONTINUOUS FIXED BACKGROUND ───────────────────────────────────────── */
+html {
+  min-height: 100%;
+  background-color: var(--bg-color);
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color);
+  background-image: var(--bg-gradient);
+  background-attachment: fixed;
+  background-size: 100% 100%;
+  color: var(--text-primary);
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  transition: background-color 300ms ease, color 300ms ease, border-color 300ms ease;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Soft viewport glows fixed behind all content */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at 12% 12%, var(--glow-1) 0%, transparent 48%),
+    radial-gradient(circle at 88% 40%, var(--glow-2) 0%, transparent 46%),
+    radial-gradient(circle at 50% 92%, var(--glow-3) 0%, transparent 42%);
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 300ms ease;
+}
+
+/* All sections & containers are transparent - single unified canvas */
+section, main, header, nav, #main-content {
+  background-color: transparent;
+}
+
+/* ── 3. CARDS & SURFACES (TOKEN DRIVEN) ───────────────────────────────────── */
+.glass-card {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  box-shadow: var(--card-shadow);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: background-color 250ms ease, border-color 250ms ease, box-shadow 250ms ease, transform 200ms ease;
+}
+
+.glass-card:hover {
+  background-color: var(--surface-hover);
+}
+
+.dark .glass-card:hover {
+  border-color: var(--border-hover);
+  box-shadow: 0 10px 32px rgba(91, 140, 255, 0.14);
+}
+
+/* ── 4. TYPOGRAPHY HELPERS (TOKEN MAPPED) ─────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+p {
+  color: var(--text-secondary);
+}
+
+.text-token-primary {
+  color: var(--text-primary) !important;
+}
+
+.text-token-secondary {
+  color: var(--text-secondary) !important;
+}
+
+.text-token-muted {
+  color: var(--text-muted) !important;
+}
+
+/* Gradient accent text */
+.gradient-text {
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-violet), var(--accent-cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-magenta {
+  background: linear-gradient(135deg, var(--accent-violet), var(--accent-cyan));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── 5. TAGS & PILLS ──────────────────────────────────────────────────────── */
+.pill-token {
+  background-color: var(--pill-bg) !important;
+  color: var(--pill-text) !important;
+  border: 1px solid var(--pill-border) !important;
+}
+
+/* ── 6. BUTTONS ───────────────────────────────────────────────────────────── */
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-violet));
+  color: #FFFFFF !important;
+  border-radius: 12px;
+  padding: 10px 20px;
+  font-weight: 600;
+  transition: all 0.22s ease;
+  box-shadow: 0 4px 18px rgba(91, 140, 255, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  box-shadow: 0 6px 24px rgba(91, 140, 255, 0.45);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn-ghost {
+  background-color: var(--surface);
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 20px;
+  font-weight: 600;
+  transition: all 0.22s ease;
+  cursor: pointer;
+}
+
+.btn-ghost:hover {
+  background-color: var(--surface-hover);
+  border-color: var(--accent-blue);
+  color: var(--text-primary) !important;
+}
+
+.btn-ghost:disabled {
+  opacity: 0.5;
+  color: var(--text-muted) !important;
+  cursor: not-allowed;
+  border-style: dashed;
+}
+
+/* ── 7. FORM INPUTS ───────────────────────────────────────────────────────── */
+.form-input {
+  width: 100%;
+  border-radius: 12px;
+  padding: 12px 16px;
+  outline: none;
+  background-color: var(--input-bg) !important;
+  color: var(--text-primary) !important;
+  border: 1.5px solid var(--border) !important;
+  font-size: 0.875rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-input::placeholder {
+  color: var(--text-muted) !important;
+}
+
+.form-input:focus {
+  border-color: var(--accent-blue) !important;
+  box-shadow: 0 0 0 3px rgba(91, 140, 255, 0.22) !important;
+}
+
+.form-input.error {
+  border-color: #ef4444 !important;
+}
+
+/* ── 8. SECTION SPACING ───────────────────────────────────────────────────── */
+.section-padding {
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+@media (min-width: 640px) {
+  .section-padding {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+@media (min-width: 1024px) {
+  .section-padding {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+.section-container {
+  max-width: 72rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ── 9. PARTICLE CANVAS ───────────────────────────────────────────────────── */
+.particle-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── 10. ANIMATIONS & EFFECTS ─────────────────────────────────────────────── */
+@keyframes border-rotate {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.animated-border {
+  background: linear-gradient(270deg, var(--accent-blue), var(--accent-violet), var(--accent-cyan));
+  background-size: 300% 300%;
+  animation: border-rotate 4s ease infinite;
+}
+
+@keyframes blob {
+  0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; transform: translate(0,0) scale(1); }
+  25%       { border-radius: 50% 50% 70% 30% / 40% 60% 40% 60%; transform: translate(10px,-10px) scale(1.04); }
+  50%       { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; transform: translate(-5px,5px) scale(0.98); }
+  75%       { border-radius: 40% 60% 40% 70% / 60% 30% 70% 40%; transform: translate(8px,8px) scale(1.02); }
+}
+.animate-blob { animation: blob 10s ease-in-out infinite; }
+
+@keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
+.cursor-blink { animation: blink 1s step-end infinite; }
+
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.animate-marquee { animation: marquee 22s linear infinite; }
+
+.badge-f1 { animation: float 5s ease-in-out infinite; }
+.badge-f2 { animation: float 6s ease-in-out infinite 1s; }
+.badge-f3 { animation: float 5.5s ease-in-out infinite 2s; }
+.badge-f4 { animation: float 6.5s ease-in-out infinite 1.5s; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-7px); }
+}
+
+.will-change-transform {
+  will-change: transform;
+}
+
+/* ── 11. SCROLLBAR & ACCESSIBILITY ────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+.dark ::-webkit-scrollbar-thumb { background: #1f2945; border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: #c5d0e6; border-radius: 3px; }
+
+:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
